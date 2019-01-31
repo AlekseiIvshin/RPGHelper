@@ -7,7 +7,11 @@
     <fragment android:id="@+id/sessionsList" android:name="com.eficksan.rpghelper.SessionsListFragment"
               android:label="fragment_sessions_list" tools:layout="@layout/fragment_sessions_list">
         <action android:id="@+id/action_sessionsList_to_inventory" app:destination="@id/inventory"/>
+        <action android:id="@+id/action_sessionsList_to_createSessionFragment"
+                app:destination="@id/create_session"/>
     </fragment>
     <fragment android:id="@+id/inventory" android:name="com.eficksan.rpghelper.InventoryFragment"
               android:label="fragment_inventory" tools:layout="@layout/fragment_inventory"/>
+    <fragment android:id="@+id/create_session" android:name="com.eficksan.rpghelper.CreateSessionFragment"
+              android:label="fragment_create_session" tools:layout="@layout/fragment_create_session"/>
 </navigation>
