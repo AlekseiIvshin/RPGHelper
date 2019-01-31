@@ -1,6 +1,7 @@
 package com.eficksan.rpghelper
 
 
+import android.app.Activity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,7 +9,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import com.eficksan.rpghelper.models.GameSession
 import com.eficksan.rpghelper.viewmodels.SessionViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -49,7 +53,10 @@ class CreateSessionFragment : Fragment() {
                         etSessionName.text.toString()
                     )
                 )
+                val imm: InputMethodManager = act.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(view.windowToken,0)
             }
+            it.findNavController().popBackStack()
         }
         return view
     }

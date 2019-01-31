@@ -34,6 +34,10 @@ class SessionViewModel(application: Application): AndroidViewModel(application){
         gameSessionDao.insertAll(session)
     }
 
+    fun delete(session: GameSession) = scope.launch(Dispatchers.IO) {
+        gameSessionDao.delete(session)
+    }
+
     override fun onCleared() {
         super.onCleared()
         parentJob.cancel()

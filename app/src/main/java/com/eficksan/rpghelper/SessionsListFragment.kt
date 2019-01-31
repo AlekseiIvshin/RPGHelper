@@ -9,10 +9,16 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.eficksan.rpghelper.adapters.SessionListAdapter
+import com.eficksan.rpghelper.models.GameSession
 import com.eficksan.rpghelper.viewmodels.SessionViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class SessionsListFragment : Fragment() {
+class SessionsListFragment : Fragment(), SessionListAdapter.ItemInteractor {
+
+    private lateinit var viewModel: SessionViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -20,14 +26,27 @@ class SessionsListFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_sessions_list, container, false)
+        viewModel = SessionViewModel(activity!!.application)
         view.findViewById<FloatingActionButton>(R.id.create_game_session)
             .setOnClickListener(Navigation.createNavigateOnClickListener(R.id.create_session, null))
 
+        val list = view.findViewById<RecyclerView>(R.id.sessions_list)
+        val adapter = SessionListAdapter(view.context, this)
+        list.adapter = adapter
+        list.layoutManager = LinearLayoutManager(view.context)
+
         activity?.let { act ->
-            SessionViewModel(activity!!.application).allSessions.observe(
+            viewModel.allSessions.observe(
                 this,
-                Observer { it -> view.findViewById<TextView>(R.id.label).text = "Games count" + it.size })
+                Observer { adapter.setSessions(it) })
         }
+
+
         return view
     }
+
+    override fun delete(session: GameSession) {
+        viewModel.delete(session)
+    }
+
 }

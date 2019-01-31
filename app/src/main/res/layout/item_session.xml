@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="wrap_content"
+                                                   android:layout_marginVertical="@dimen/card_spacing_vertical"
+                                                   android:layout_marginHorizontal="@dimen/card_spacing_horizontal"
+>
+    <TextView android:id="@+id/session_name" style="@style/Base.TextAppearance.AppCompat.Display1"
+              android:layout_margin="@dimen/card_spacing"
+              android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="Session name"/>
+
+    <Button android:id="@+id/delete_session" android:layout_gravity="end|center_vertical" android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:text="Remove"/>
+</com.google.android.material.card.MaterialCardView>
