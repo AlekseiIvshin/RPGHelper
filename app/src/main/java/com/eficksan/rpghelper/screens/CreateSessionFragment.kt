@@ -1,4 +1,4 @@
-package com.eficksan.rpghelper
+package com.eficksan.rpghelper.screens
 
 
 import android.app.Activity
@@ -11,8 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import com.eficksan.rpghelper.R
 import com.eficksan.rpghelper.models.GameSession
 import com.eficksan.rpghelper.viewmodels.SessionViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton

@@ -21,7 +21,8 @@ class SessionListAdapter internal constructor(context: Context, val itemInteract
     }
 
     interface ItemInteractor {
-        fun delete(session: GameSession)
+        fun onPress(session: GameSession)
+        fun onDelete(session: GameSession)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
@@ -31,7 +32,8 @@ class SessionListAdapter internal constructor(context: Context, val itemInteract
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.sessionName.text = items[position].name
-        holder.delete.setOnClickListener { itemInteractor.delete(items[position]) }
+        holder.delete.setOnClickListener { itemInteractor.onDelete(items[position]) }
+        holder.itemView.setOnClickListener { itemInteractor.onPress(items[position]) }
 
     }
 
