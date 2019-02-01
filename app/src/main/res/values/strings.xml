@@ -3,4 +3,12 @@
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="hint_session_name">Session name</string>
+    <string name="hint_item_name">Item name</string>
+    <string name="hint_item_cost">Cost</string>
+    <string name="hint_item_weight">Weight</string>
+    <string name="currency_short">G</string>
+    <string name="weight_measuring_value">kg</string>
+    <string name="Description"/>
+    <string name="money">%1$d G</string>
+    <string name="weight">%1$.2f kg</string>
 </resources>

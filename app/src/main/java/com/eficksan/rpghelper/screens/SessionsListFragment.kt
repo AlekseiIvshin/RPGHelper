@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -53,7 +52,7 @@ class SessionsListFragment : Fragment(), SessionListAdapter.ItemInteractor {
     override fun onPress(session: GameSession) {
         view?.let {
             val data = Bundle()
-            data.putString("uid", session.uid)
+            data.putString("session_uid", session.uid)
             it.findNavController().navigate(R.id.inventory, data)
         }
     }
