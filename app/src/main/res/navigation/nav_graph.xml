@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools" android:id="@+id/nav_graph"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/nav_graph"
             app:startDestination="@id/sessionsList">
 
     <fragment android:id="@+id/sessionsList" android:name="com.eficksan.rpghelper.screens.SessionsListFragment"
@@ -17,6 +18,7 @@
     </fragment>
     <fragment android:id="@+id/create_session" android:name="com.eficksan.rpghelper.screens.CreateSessionFragment"
               android:label="fragment_create_session" tools:layout="@layout/fragment_create_session"/>
-    <fragment android:id="@+id/add_inventory_item" android:name="com.eficksan.rpghelper.screens.AddInventoryItemFragment"
+    <fragment android:id="@+id/add_inventory_item"
+              android:name="com.eficksan.rpghelper.screens.AddInventoryItemFragment"
               android:label="fragment_add_inventory_item" tools:layout="@layout/fragment_add_inventory_item"/>
 </navigation>

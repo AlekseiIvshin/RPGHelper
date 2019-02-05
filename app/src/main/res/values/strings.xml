@@ -11,4 +11,8 @@
     <string name="Description"/>
     <string name="money">%1$d G</string>
     <string name="weight">%1$.2f kg</string>
+    <string name="menu_delete">Delete</string>
+    <string name="menu_edit">Edit</string>
+    <string name="menu_equip">Equip/Take off</string>
+    <string name="menu_cancel">Clear</string>
 </resources>
