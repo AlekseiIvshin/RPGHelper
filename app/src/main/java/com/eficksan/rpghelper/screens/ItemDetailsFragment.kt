@@ -52,7 +52,9 @@ class ItemDetailsFragment : Fragment() {
         (activity as AppCompatActivity).setSupportActionBar(bottomBar)
 
         view.findViewById<FloatingActionButton>(R.id.fab).setOnClickListener {
-            TODO("Open edit screen")
+            val data = Bundle()
+            data.putString("item_uid", itemUid)
+            view.findNavController().navigate(R.id.add_inventory_item, data)
         }
 
         return view
