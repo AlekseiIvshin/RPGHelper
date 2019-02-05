@@ -23,7 +23,6 @@ class InventoryFragment : Fragment(), InventoryAdapter.ItemInteractor {
 
     private lateinit var viewModel: InventoryViewModel
 
-    private lateinit var bottomBar: BottomAppBar
     private lateinit var money: TextView
     private lateinit var totalWeight: TextView
 
@@ -44,6 +43,7 @@ class InventoryFragment : Fragment(), InventoryAdapter.ItemInteractor {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_inventory, container, false)
 
+        (activity as AppCompatActivity).setSupportActionBar(view.findViewById(R.id.bottom_bar))
 
         view.findViewById<FloatingActionButton>(R.id.add_item).setOnClickListener {
             val data = Bundle()
@@ -51,8 +51,6 @@ class InventoryFragment : Fragment(), InventoryAdapter.ItemInteractor {
             view.findNavController().navigate(R.id.add_inventory_item, data)
         }
 
-        bottomBar = view.findViewById(R.id.bottom_bar)
-        (activity as AppCompatActivity).setSupportActionBar(bottomBar)
 
         money = view.findViewById(R.id.money)
         // TODO: add changing money screen

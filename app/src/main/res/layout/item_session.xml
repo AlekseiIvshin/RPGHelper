@@ -9,7 +9,4 @@
     <TextView android:id="@+id/session_name" style="@style/Base.TextAppearance.AppCompat.Display1"
               android:layout_margin="@dimen/card_spacing"
               android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="Session name"/>
-
-    <Button android:id="@+id/delete_session" android:layout_gravity="end|center_vertical" android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:text="Remove"/>
 </com.google.android.material.card.MaterialCardView>

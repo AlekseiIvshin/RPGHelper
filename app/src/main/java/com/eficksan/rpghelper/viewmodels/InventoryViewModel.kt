@@ -42,8 +42,6 @@ class InventoryViewModel(application: Application, val sessionUid: String): Andr
 
     init {
         allItems = inventoryDao.getAll(sessionUid)
-        selectedItems = MutableLiveData()
-        selectedItems.value = ArrayList()
 
         mode = MutableLiveData()
         mode.value = MODE_DEFAULT
@@ -51,6 +49,8 @@ class InventoryViewModel(application: Application, val sessionUid: String): Andr
         money = MutableLiveData()
         sessionDao.findById(sessionUid).observeForever { money.value = it.money }
 
+        selectedItems = MutableLiveData()
+        selectedItems.value = ArrayList()
         selectedItems.observeForever {
             mode.value = when (it.size) {
                 0 -> MODE_DEFAULT
