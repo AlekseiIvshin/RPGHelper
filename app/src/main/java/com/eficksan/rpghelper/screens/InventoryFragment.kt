@@ -52,7 +52,6 @@ class InventoryFragment : Fragment(), InventoryAdapter.ItemInteractor {
         }
 
         bottomBar = view.findViewById(R.id.bottom_bar)
-
         (activity as AppCompatActivity).setSupportActionBar(bottomBar)
 
         money = view.findViewById(R.id.money)
@@ -60,7 +59,6 @@ class InventoryFragment : Fragment(), InventoryAdapter.ItemInteractor {
         viewModel.money.observe(this, Observer { money.text = getString(R.string.money, it) })
 
         totalWeight = view.findViewById(R.id.total_weight)
-        // TODO: add changing money screen
         viewModel.allItems.observe(this, Observer {
             totalWeight.text = getString(R.string.weight,it.sumByDouble { item -> item.weight.toDouble() })
         })
@@ -120,7 +118,9 @@ class InventoryFragment : Fragment(), InventoryAdapter.ItemInteractor {
         if (viewModel.mode.value == InventoryViewModel.MODE_SELECTION) {
             viewModel.selectItem(item)
         } else {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            val data = Bundle()
+            data.putString("item_uid",item.uid)
+            view?.findNavController()?.navigate(R.id.itemDetailsFragment, data)
         }
     }
 

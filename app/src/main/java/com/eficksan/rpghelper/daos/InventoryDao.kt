@@ -10,6 +10,9 @@ interface  InventoryDao {
     @Query("select * from inventory where session_uid LIKE :sessionUid")
     fun getAll(sessionUid: String): LiveData<List<Item>>
 
+    @Query("select * from inventory where uid LIKE :itemUid")
+    fun findById(itemUid: String): LiveData<Item>
+
     @Insert
     fun insertAll(vararg items: Item)
 

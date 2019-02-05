@@ -24,7 +24,6 @@ class SessionsListFragment : Fragment(), SessionListAdapter.ItemInteractor {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_sessions_list, container, false)
         viewModel = SessionViewModel(activity!!.application)
         view.findViewById<FloatingActionButton>(R.id.create_game_session)
