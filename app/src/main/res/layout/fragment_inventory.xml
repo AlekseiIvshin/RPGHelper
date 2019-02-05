@@ -2,13 +2,26 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent" android:layout_height="match_parent">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                  android:orientation="vertical">
+        <TextView
+                android:paddingHorizontal="@dimen/card_spacing_horizontal"
+                android:paddingVertical="@dimen/card_spacing_vertical"
+                tools:text="1001211 G"
+                android:layout_width="match_parent"
+                android:gravity="center_vertical"
+                android:drawableLeft="@android:drawable/btn_star"
+                android:layout_height="wrap_content"
+                android:id="@+id/money"/>
+        <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/items"/>
+    </LinearLayout>
     <!-- TODO: Update blank fragment layout -->
-    <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" android:id="@+id/items"/>
+
     <com.google.android.material.bottomappbar.BottomAppBar
             android:id="@+id/bottom_bar"
             android:layout_width="match_parent"

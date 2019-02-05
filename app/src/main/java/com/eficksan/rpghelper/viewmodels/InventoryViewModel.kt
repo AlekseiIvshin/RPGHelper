@@ -4,8 +4,10 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.room.Room
 import com.eficksan.rpghelper.daos.AppDatabase
+import com.eficksan.rpghelper.daos.GameSessionDao
 import com.eficksan.rpghelper.daos.InventoryDao
 import com.eficksan.rpghelper.models.Item
 import kotlinx.coroutines.CoroutineScope
@@ -30,17 +32,25 @@ class InventoryViewModel(application: Application, val sessionUid: String): Andr
     private val inventoryDao: InventoryDao =
         Room.databaseBuilder(application, AppDatabase::class.java, "rpg-helper").build()
             .inventoryDao()
+    private val sessionDao: GameSessionDao =
+        Room.databaseBuilder(application, AppDatabase::class.java, "rpg-helper").build()
+            .gameSessionDao()
 
     val allItems: LiveData<List<Item>>
     val selectedItems: MutableLiveData<ArrayList<Item>>
     val mode: MutableLiveData<Int>
+    var money: MutableLiveData<Int>
 
     init {
         allItems = inventoryDao.getAll(sessionUid)
         selectedItems = MutableLiveData()
         selectedItems.value = ArrayList()
+
         mode = MutableLiveData()
         mode.value = MODE_DEFAULT
+
+        money = MutableLiveData()
+        sessionDao.findById(sessionUid).observeForever { money.value = it.money }
 
         selectedItems.observeForever {
             mode.value = when (it.size) {

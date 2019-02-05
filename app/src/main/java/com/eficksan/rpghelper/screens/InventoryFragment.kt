@@ -3,6 +3,7 @@ package com.eficksan.rpghelper.screens
 import androidx.fragment.app.Fragment
 import android.os.Bundle
 import android.view.*
+import android.widget.TextView
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -23,6 +24,7 @@ class InventoryFragment : Fragment(), InventoryAdapter.ItemInteractor {
     private lateinit var viewModel: InventoryViewModel
 
     private lateinit var bottomBar: BottomAppBar
+    private lateinit var money: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +42,7 @@ class InventoryFragment : Fragment(), InventoryAdapter.ItemInteractor {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_inventory, container, false)
 
+
         view.findViewById<FloatingActionButton>(R.id.add_item).setOnClickListener {
             val data = Bundle()
             data.putString("session_uid", sessionUid)
@@ -49,6 +52,11 @@ class InventoryFragment : Fragment(), InventoryAdapter.ItemInteractor {
         bottomBar = view.findViewById(R.id.bottom_bar)
 
         (activity as AppCompatActivity).setSupportActionBar(bottomBar)
+
+
+        money = view.findViewById(R.id.money)
+        // TODO: add changing money screen
+        viewModel.money.observe(this, Observer { money.text = getString(R.string.money, it) })
 
         val itemsList: RecyclerView = view.findViewById(R.id.items)
         val adapter = InventoryAdapter(view.context, this)
@@ -60,6 +68,7 @@ class InventoryFragment : Fragment(), InventoryAdapter.ItemInteractor {
             Observer { adapter.setItems(it) })
         viewModel.selectedItems.observe(this, Observer {
             activity?.invalidateOptionsMenu()
+            adapter.setSelectedItems(it.map { item -> item.uid })
         })
 
 
@@ -67,11 +76,11 @@ class InventoryFragment : Fragment(), InventoryAdapter.ItemInteractor {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        if (inflater!= null && viewModel.selectedItems.value!=null && viewModel.selectedItems.value!!.isNotEmpty()) {
+        if (inflater != null && viewModel.selectedItems.value != null && viewModel.selectedItems.value!!.isNotEmpty()) {
             if (viewModel.selectedItems.value!!.size == 1) {
-                inflater.inflate(R.menu.menu_single_item_selected,menu)
+                inflater.inflate(R.menu.menu_single_item_selected, menu)
             } else if (viewModel.selectedItems.value!!.size > 1) {
-                inflater.inflate(R.menu.menu_multi_item_selected,menu)
+                inflater.inflate(R.menu.menu_multi_item_selected, menu)
             }
         }
         return super.onCreateOptionsMenu(menu, inflater)
@@ -79,7 +88,7 @@ class InventoryFragment : Fragment(), InventoryAdapter.ItemInteractor {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
-            R.id.cancel_selection-> {
+            R.id.cancel_selection -> {
                 viewModel.clearSelection()
                 return true
             }

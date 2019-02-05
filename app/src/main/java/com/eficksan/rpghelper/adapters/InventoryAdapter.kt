@@ -12,10 +12,11 @@ import com.eficksan.rpghelper.R
 import com.eficksan.rpghelper.models.GameSession
 import com.eficksan.rpghelper.models.Item
 
-class InventoryAdapter internal constructor(context: Context, val itemInteractor: ItemInteractor) :
+class InventoryAdapter internal constructor(val context: Context, val itemInteractor: ItemInteractor) :
     RecyclerView.Adapter<InventoryAdapter.ViewHolder>() {
     protected val inflater: LayoutInflater = LayoutInflater.from(context)
     private var items = emptyList<Item>()
+    private var selectedItems = emptyList<String>()
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val name: TextView = itemView.findViewById(R.id.item_name)
@@ -49,10 +50,20 @@ class InventoryAdapter internal constructor(context: Context, val itemInteractor
             itemInteractor.onLongPress(items[position])
         }
 
+        if (this.selectedItems.contains(items[position].uid)){
+            holder.itemView.setBackgroundColor(context.resources.getColor(android.R.color.holo_green_dark, context.theme))
+        } else {
+            holder.itemView.setBackgroundColor(context.resources.getColor(android.R.color.white, context.theme))
+        }
     }
 
     internal fun setItems(items: List<Item>) {
         this.items = items
+        this.notifyDataSetChanged()
+    }
+
+    internal fun setSelectedItems(selectedItems: List<String>) {
+        this.selectedItems = selectedItems
         this.notifyDataSetChanged()
     }
 }
