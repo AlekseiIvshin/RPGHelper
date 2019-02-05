@@ -25,6 +25,8 @@ class InventoryFragment : Fragment(), InventoryAdapter.ItemInteractor {
 
     private lateinit var bottomBar: BottomAppBar
     private lateinit var money: TextView
+    private lateinit var totalWeight: TextView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,10 +55,15 @@ class InventoryFragment : Fragment(), InventoryAdapter.ItemInteractor {
 
         (activity as AppCompatActivity).setSupportActionBar(bottomBar)
 
-
         money = view.findViewById(R.id.money)
         // TODO: add changing money screen
         viewModel.money.observe(this, Observer { money.text = getString(R.string.money, it) })
+
+        totalWeight = view.findViewById(R.id.total_weight)
+        // TODO: add changing money screen
+        viewModel.allItems.observe(this, Observer {
+            totalWeight.text = getString(R.string.weight,it.sumByDouble { item -> item.weight.toDouble() })
+        })
 
         val itemsList: RecyclerView = view.findViewById(R.id.items)
         val adapter = InventoryAdapter(view.context, this)
@@ -68,9 +75,8 @@ class InventoryFragment : Fragment(), InventoryAdapter.ItemInteractor {
             Observer { adapter.setItems(it) })
         viewModel.selectedItems.observe(this, Observer {
             activity?.invalidateOptionsMenu()
-            adapter.setSelectedItems(it.map { item -> item.uid })
+            adapter.setSelectedItems(it)
         })
-
 
         return view
     }
@@ -90,6 +96,15 @@ class InventoryFragment : Fragment(), InventoryAdapter.ItemInteractor {
         when (item?.itemId) {
             R.id.cancel_selection -> {
                 viewModel.clearSelection()
+                return true
+            }
+            R.id.delete -> {
+                viewModel.deleteSelected()
+                viewModel.clearSelection()
+                return true
+            }
+            R.id.equip -> {
+                viewModel.equipOrTakeOffSelected()
                 return true
             }
         }

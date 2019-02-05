@@ -21,5 +21,5 @@ data class Item(
     @ColumnInfo(name = "weight") val weight: Float,
     @ColumnInfo(name = "cost") val cost: Int,
     @ColumnInfo(name = "session_uid") val sessionUid: String,
-    @ColumnInfo(name = "is_equipped") val isEquipped: Boolean
+    @ColumnInfo(name = "is_equipped") var isEquipped: Boolean
 )

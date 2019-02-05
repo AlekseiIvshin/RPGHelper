@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.room.Room
 import com.eficksan.rpghelper.daos.AppDatabase
 import com.eficksan.rpghelper.daos.GameSessionDao
@@ -37,7 +36,7 @@ class InventoryViewModel(application: Application, val sessionUid: String): Andr
             .gameSessionDao()
 
     val allItems: LiveData<List<Item>>
-    val selectedItems: MutableLiveData<ArrayList<Item>>
+    val selectedItems: MutableLiveData<ArrayList<String>>
     val mode: MutableLiveData<Int>
     var money: MutableLiveData<Int>
 
@@ -64,16 +63,37 @@ class InventoryViewModel(application: Application, val sessionUid: String): Andr
         inventoryDao.insertAll(item)
     }
 
+    fun update(item: Item) = scope.launch(Dispatchers.IO) {
+        inventoryDao.update(item)
+    }
+
     fun delete(item: Item) = scope.launch(Dispatchers.IO) {
         inventoryDao.delete(item)
     }
 
+    fun deleteSelected() {
+        selectedItems.value?.let { selected ->
+            allItems.value?.filter { item-> selected.contains(item.uid) }?.forEach { delete(it) }
+        }
+    }
+
+    fun equipOrTakeOffSelected() {
+        selectedItems.value?.let { selected ->
+            val selectedItemsList = allItems.value?.filter { item-> selected.contains(item.uid) }
+            val shouldEquip = selectedItemsList!!.count { it.isEquipped } == 0
+            selectedItemsList.forEach {
+                it.isEquipped = shouldEquip
+                update(it)
+            }
+        }
+    }
+
     fun selectItem(item: Item) {
         selectedItems.value?.let {
-            if (it.contains(item)){
-                it.remove(item)
+            if (it.contains(item.uid)){
+                it.remove(item.uid)
             } else {
-                it.add(item)
+                it.add(item.uid)
             }
             selectedItems.value = selectedItems.value
         }
