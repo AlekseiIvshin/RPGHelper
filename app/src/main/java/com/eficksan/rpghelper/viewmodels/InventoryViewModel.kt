@@ -8,6 +8,7 @@ import androidx.room.Room
 import com.eficksan.rpghelper.daos.AppDatabase
 import com.eficksan.rpghelper.daos.GameSessionDao
 import com.eficksan.rpghelper.daos.InventoryDao
+import com.eficksan.rpghelper.models.GameSession
 import com.eficksan.rpghelper.models.Item
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -16,17 +17,7 @@ import kotlinx.coroutines.launch
 import java.util.ArrayList
 import kotlin.coroutines.CoroutineContext
 
-class InventoryViewModel(application: Application, val sessionUid: String): AndroidViewModel(application){
-
-    companion object {
-        val MODE_DEFAULT = 0
-        val MODE_SELECTION = 1
-    }
-
-    private var parentJob = Job()
-    private val coroutineContext: CoroutineContext
-    get() = parentJob+ Dispatchers.Main
-    private val scope = CoroutineScope(coroutineContext)
+class InventoryViewModel(application: Application, val sessionUid: String): SelectableListViewModel<Item>(application){
 
     private val inventoryDao: InventoryDao =
         Room.databaseBuilder(application, AppDatabase::class.java, "rpg-helper").build()
@@ -35,46 +26,26 @@ class InventoryViewModel(application: Application, val sessionUid: String): Andr
         Room.databaseBuilder(application, AppDatabase::class.java, "rpg-helper").build()
             .gameSessionDao()
 
-    val allItems: LiveData<List<Item>>
-    val selectedItems: MutableLiveData<ArrayList<String>>
-    val mode: MutableLiveData<Int>
     var money: MutableLiveData<Int>
 
     init {
         allItems = inventoryDao.getAll(sessionUid)
-
-        mode = MutableLiveData()
-        mode.value = MODE_DEFAULT
-
         money = MutableLiveData()
         sessionDao.findById(sessionUid).observeForever { money.value = it.money }
-
-        selectedItems = MutableLiveData()
-        selectedItems.value = ArrayList()
-        selectedItems.observeForever {
-            mode.value = when (it.size) {
-                0 -> MODE_DEFAULT
-                else -> MODE_SELECTION
-            }
-        }
     }
 
-    fun insert(item: Item) = scope.launch(Dispatchers.IO) {
+    override fun getAll(): LiveData<List<Item>> = inventoryDao.getAll(sessionUid)
+
+    override fun insertInIO(item: Item) {
         inventoryDao.insertAll(item)
     }
 
-    fun update(item: Item) = scope.launch(Dispatchers.IO) {
+    override fun updateInIO(item: Item) {
         inventoryDao.update(item)
     }
 
-    fun delete(item: Item) = scope.launch(Dispatchers.IO) {
+    override fun deleteInIO(item: Item) {
         inventoryDao.delete(item)
-    }
-
-    fun deleteSelected() {
-        selectedItems.value?.let { selected ->
-            allItems.value?.filter { item-> selected.contains(item.uid) }?.forEach { delete(it) }
-        }
     }
 
     fun equipOrTakeOffSelected() {
@@ -86,26 +57,5 @@ class InventoryViewModel(application: Application, val sessionUid: String): Andr
                 update(it)
             }
         }
-    }
-
-    fun selectItem(item: Item) {
-        selectedItems.value?.let {
-            if (it.contains(item.uid)){
-                it.remove(item.uid)
-            } else {
-                it.add(item.uid)
-            }
-            selectedItems.value = selectedItems.value
-        }
-    }
-
-    fun clearSelection() {
-        selectedItems.value?.clear()
-        selectedItems.value = selectedItems.value
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        parentJob.cancel()
     }
 }

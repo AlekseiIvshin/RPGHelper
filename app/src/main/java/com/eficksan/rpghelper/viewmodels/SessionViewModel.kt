@@ -16,75 +16,28 @@ import kotlinx.coroutines.launch
 import java.util.ArrayList
 import kotlin.coroutines.CoroutineContext
 
-class SessionViewModel(application: Application): AndroidViewModel(application){
-
-    companion object {
-        val MODE_DEFAULT = 0
-        val MODE_SELECTION = 1
-    }
-
-    private var parentJob = Job()
-    private val coroutineContext: CoroutineContext
-        get() = parentJob+Dispatchers.Main
-    private val scope = CoroutineScope(coroutineContext)
+class SessionViewModel(application: Application): SelectableListViewModel<GameSession>(application){
 
     private val gameSessionDao: GameSessionDao =
         Room.databaseBuilder(application, AppDatabase::class.java, "rpg-helper").build()
             .gameSessionDao()
 
-    val allSessions: LiveData<List<GameSession>>
-    val selectedItems: MutableLiveData<ArrayList<String>>
-    val mode: MutableLiveData<Int>
-
     init {
-        allSessions = gameSessionDao.getAll()
-
-        mode = MutableLiveData()
-        mode.value = InventoryViewModel.MODE_DEFAULT
-
-        selectedItems = MutableLiveData()
-        selectedItems.value = ArrayList()
-        selectedItems.observeForever {
-            mode.value = when (it.size) {
-                0 -> InventoryViewModel.MODE_DEFAULT
-                else -> InventoryViewModel.MODE_SELECTION
-            }
-        }
+        allItems = gameSessionDao.getAll()
     }
 
-    fun insert(session: GameSession) = scope.launch(Dispatchers.IO) {
-        gameSessionDao.insertAll(session)
+    override fun getAll(): LiveData<List<GameSession>> = gameSessionDao.getAll()
+
+    override fun insertInIO(item: GameSession) {
+        gameSessionDao.insertAll(item)
     }
 
-    fun delete(session: GameSession) = scope.launch(Dispatchers.IO) {
-        gameSessionDao.delete(session)
+    override fun updateInIO(item: GameSession) {
+        gameSessionDao.update(item)
     }
 
-    fun selectItem(item: GameSession) {
-        selectedItems.value?.let {
-            if (it.contains(item.uid)){
-                it.remove(item.uid)
-            } else {
-                it.add(item.uid)
-            }
-            selectedItems.value = selectedItems.value
-        }
-    }
-
-    fun clearSelection() {
-        selectedItems.value?.clear()
-        selectedItems.value = selectedItems.value
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        parentJob.cancel()
-    }
-
-    fun deleteSelected() {
-        selectedItems.value?.let { selected ->
-            allSessions.value?.filter { item-> selected.contains(item.uid) }?.forEach { delete(it) }
-        }
+    override fun deleteInIO(item: GameSession) {
+        gameSessionDao.delete(item)
     }
 
 }

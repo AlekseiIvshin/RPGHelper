@@ -10,14 +10,16 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.eficksan.rpghelper.R
+import com.eficksan.rpghelper.adapters.BaseSelectingAdapter
 import com.eficksan.rpghelper.adapters.SessionListAdapter
 import com.eficksan.rpghelper.models.GameSession
 import com.eficksan.rpghelper.models.Item
 import com.eficksan.rpghelper.viewmodels.InventoryViewModel
+import com.eficksan.rpghelper.viewmodels.SelectableListViewModel
 import com.eficksan.rpghelper.viewmodels.SessionViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class SessionsListFragment : Fragment(), SessionListAdapter.ItemInteractor {
+class SessionsListFragment : Fragment(), BaseSelectingAdapter.ItemInteractor<GameSession> {
 
     private lateinit var viewModel: SessionViewModel
 
@@ -43,14 +45,12 @@ class SessionsListFragment : Fragment(), SessionListAdapter.ItemInteractor {
         list.adapter = adapter
         list.layoutManager = LinearLayoutManager(view.context)
 
-        activity?.let {
-            viewModel.allSessions.observe(
-                this,
-                Observer { adapter.setSessions(it) })
-        }
+        viewModel.allItems.observe(
+            this,
+            Observer { adapter.updateItems(it) })
         viewModel.selectedItems.observe(this, Observer {
             activity?.invalidateOptionsMenu()
-            adapter.setSelectedItems(it)
+            adapter.updateSelectedItems(it)
         })
 
         return view
@@ -62,7 +62,7 @@ class SessionsListFragment : Fragment(), SessionListAdapter.ItemInteractor {
     }
 
     override fun onPress(item: GameSession) {
-        if (viewModel.mode.value == InventoryViewModel.MODE_SELECTION) {
+        if (viewModel.mode.value == SelectableListViewModel.MODE_SELECTION) {
             viewModel.selectItem(item)
         } else {
             view?.let {

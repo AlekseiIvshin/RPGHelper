@@ -12,11 +12,8 @@ import com.eficksan.rpghelper.R
 import com.eficksan.rpghelper.models.GameSession
 import com.eficksan.rpghelper.models.Item
 
-class InventoryAdapter internal constructor(val context: Context, val itemInteractor: ItemInteractor) :
-    RecyclerView.Adapter<InventoryAdapter.ViewHolder>() {
-    protected val inflater: LayoutInflater = LayoutInflater.from(context)
-    private var items = emptyList<Item>()
-    private var selectedItems = emptyList<String>()
+class InventoryAdapter internal constructor(context: Context, itemInteractor: ItemInteractor<Item>) :
+    BaseSelectingAdapter<InventoryAdapter.ViewHolder, Item>(context, itemInteractor) {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val name: TextView = itemView.findViewById(R.id.item_name)
@@ -25,17 +22,11 @@ class InventoryAdapter internal constructor(val context: Context, val itemIntera
         val isEquipped: ImageView = itemView.findViewById(R.id.item_equipped)
     }
 
-    interface ItemInteractor {
-        fun onLongPress(item: Item): Boolean
-        fun onPress(item: Item)
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(inflater.inflate(R.layout.item_inventory, parent, false))
 
-    override fun getItemCount(): Int = items.size
-
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        super.onBindViewHolder(holder, position)
         holder.name.text = items[position].name
         holder.cost.text = inflater.context.getString(R.string.money, items[position].cost)
         holder.weight.text = inflater.context.getString(R.string.weight, items[position].weight)
@@ -44,26 +35,5 @@ class InventoryAdapter internal constructor(val context: Context, val itemIntera
         } else {
             holder.isEquipped.visibility = View.INVISIBLE
         }
-
-        holder.itemView.setOnClickListener { itemInteractor.onPress(items[position]) }
-        holder.itemView.setOnLongClickListener {
-            itemInteractor.onLongPress(items[position])
-        }
-
-        if (this.selectedItems.contains(items[position].uid)){
-            holder.itemView.setBackgroundColor(context.resources.getColor(android.R.color.holo_green_dark, context.theme))
-        } else {
-            holder.itemView.setBackgroundColor(context.resources.getColor(android.R.color.white, context.theme))
-        }
-    }
-
-    internal fun setItems(items: List<Item>) {
-        this.items = items
-        this.notifyDataSetChanged()
-    }
-
-    internal fun setSelectedItems(selectedItems: List<String>) {
-        this.selectedItems = selectedItems
-        this.notifyDataSetChanged()
     }
 }

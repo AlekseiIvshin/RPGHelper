@@ -14,11 +14,12 @@
                 android:layout_width="36dp"
                 android:layout_height="36dp" android:id="@+id/item_equipped" app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="32dp" android:layout_marginTop="16dp"
+                android:visibility="invisible"
                 app:layout_constraintTop_toTopOf="parent"/>
         <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/hello_blank_fragment"
+                tools:text="@string/hello_blank_fragment"
                 android:id="@+id/item_name" app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline" android:layout_marginTop="16dp"

@@ -1,10 +1,7 @@
 package com.eficksan.rpghelper.daos
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import com.eficksan.rpghelper.models.GameSession
 
 @Dao
@@ -17,6 +14,9 @@ interface  GameSessionDao{
 
     @Insert
     fun insertAll(vararg session: GameSession)
+
+    @Update
+    fun update(session: GameSession)
 
     @Delete
     fun delete(gameSession: GameSession)

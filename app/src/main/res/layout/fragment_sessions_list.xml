@@ -17,8 +17,7 @@
             android:layout_height="48dp"
             android:layout_gravity="bottom"
             android:backgroundTint="@android:color/holo_red_dark"
-            app:fabAlignmentMode="end"
-            app:navigationIcon="@android:drawable/ic_menu_add"/>
+            app:fabAlignmentMode="end"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:src="@android:drawable/ic_menu_add"

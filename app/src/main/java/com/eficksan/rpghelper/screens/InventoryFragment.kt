@@ -11,13 +11,15 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.eficksan.rpghelper.R
+import com.eficksan.rpghelper.adapters.BaseSelectingAdapter
 import com.eficksan.rpghelper.adapters.InventoryAdapter
 import com.eficksan.rpghelper.models.Item
 import com.eficksan.rpghelper.viewmodels.InventoryViewModel
+import com.eficksan.rpghelper.viewmodels.SelectableListViewModel
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class InventoryFragment : Fragment(), InventoryAdapter.ItemInteractor {
+class InventoryFragment : Fragment(), BaseSelectingAdapter.ItemInteractor<Item> {
 
     private var sessionUid: String? = null
 
@@ -51,7 +53,6 @@ class InventoryFragment : Fragment(), InventoryAdapter.ItemInteractor {
             view.findNavController().navigate(R.id.add_inventory_item, data)
         }
 
-
         money = view.findViewById(R.id.money)
         // TODO: add changing money screen
         viewModel.money.observe(this, Observer { money.text = getString(R.string.money, it) })
@@ -68,10 +69,10 @@ class InventoryFragment : Fragment(), InventoryAdapter.ItemInteractor {
 
         viewModel.allItems.observe(
             this,
-            Observer { adapter.setItems(it) })
+            Observer { adapter.updateItems(it) })
         viewModel.selectedItems.observe(this, Observer {
             activity?.invalidateOptionsMenu()
-            adapter.setSelectedItems(it)
+            adapter.updateSelectedItems(it)
         })
 
         return view
@@ -113,7 +114,7 @@ class InventoryFragment : Fragment(), InventoryAdapter.ItemInteractor {
     }
 
     override fun onPress(item: Item) {
-        if (viewModel.mode.value == InventoryViewModel.MODE_SELECTION) {
+        if (viewModel.mode.value == SelectableListViewModel.MODE_SELECTION) {
             viewModel.selectItem(item)
         } else {
             val data = Bundle()
