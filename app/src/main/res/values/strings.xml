@@ -15,4 +15,7 @@
     <string name="menu_edit">Edit</string>
     <string name="menu_equip">Equip/Take off</string>
     <string name="menu_cancel">Clear</string>
+    <string name="change_money_by">Change money by</string>
+    <string name="apply">Apply</string>
+    <string name="cancel">Cancel</string>
 </resources>

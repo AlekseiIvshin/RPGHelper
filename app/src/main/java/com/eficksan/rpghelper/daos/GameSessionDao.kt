@@ -12,6 +12,9 @@ interface  GameSessionDao{
     @Query("select * from game_session where uid like :uid")
     fun findById(uid: String): LiveData<GameSession>
 
+    @Query("select * from game_session where uid like :uid")
+    fun syncFindById(uid: String): GameSession
+
     @Insert
     fun insertAll(vararg session: GameSession)
 

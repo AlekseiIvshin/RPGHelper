@@ -27,7 +27,7 @@ abstract class SelectableListViewModel<T : BaseModel>(application: Application) 
     private var parentJob = Job()
     private val coroutineContext: CoroutineContext
         get() = parentJob + Dispatchers.Main
-    private val scope = CoroutineScope(coroutineContext)
+    protected val scope = CoroutineScope(coroutineContext)
 
     private val inventoryDao: InventoryDao =
         Room.databaseBuilder(application, AppDatabase::class.java, "rpg-helper").build()

@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.room.Room
 import com.eficksan.rpghelper.daos.AppDatabase
 import com.eficksan.rpghelper.daos.GameSessionDao
@@ -17,7 +18,8 @@ import kotlinx.coroutines.launch
 import java.util.ArrayList
 import kotlin.coroutines.CoroutineContext
 
-class InventoryViewModel(application: Application, val sessionUid: String): SelectableListViewModel<Item>(application){
+class InventoryViewModel(application: Application, val sessionUid: String) :
+    SelectableListViewModel<Item>(application) {
 
     private val inventoryDao: InventoryDao =
         Room.databaseBuilder(application, AppDatabase::class.java, "rpg-helper").build()
@@ -50,12 +52,18 @@ class InventoryViewModel(application: Application, val sessionUid: String): Sele
 
     fun equipOrTakeOffSelected() {
         selectedItems.value?.let { selected ->
-            val selectedItemsList = allItems.value?.filter { item-> selected.contains(item.uid) }
+            val selectedItemsList = allItems.value?.filter { item -> selected.contains(item.uid) }
             val shouldEquip = selectedItemsList!!.count { it.isEquipped } == 0
             selectedItemsList.forEach {
                 it.isEquipped = shouldEquip
                 update(it)
             }
         }
+    }
+
+    fun updateMoney(moneyDelta: Int) = scope.launch(Dispatchers.IO) {
+        val foundSession= sessionDao.syncFindById(sessionUid)
+        foundSession.money += moneyDelta
+        sessionDao.update(foundSession)
     }
 }

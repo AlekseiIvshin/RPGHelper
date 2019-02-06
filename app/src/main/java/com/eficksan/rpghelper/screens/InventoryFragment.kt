@@ -1,10 +1,15 @@
 package com.eficksan.rpghelper.screens
 
+import android.app.Dialog
+import android.content.DialogInterface
 import androidx.fragment.app.Fragment
 import android.os.Bundle
+import android.text.InputType
 import android.view.*
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toolbar
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
@@ -54,12 +59,28 @@ class InventoryFragment : Fragment(), BaseSelectingAdapter.ItemInteractor<Item> 
         }
 
         money = view.findViewById(R.id.money)
-        // TODO: add changing money screen
+        money.setOnClickListener {
+            with(AlertDialog.Builder(context!!)) {
+                setTitle(R.string.change_money_by)
+                val input = EditText(context)
+                input.inputType = InputType.TYPE_CLASS_NUMBER.or(InputType.TYPE_NUMBER_FLAG_SIGNED)
+                setView(input)
+                setPositiveButton(R.string.apply) { _, _ ->
+                    run {
+                        viewModel.updateMoney(input.text.toString().toInt())
+                    }
+
+                }
+                show()
+            }
+
+        }
+
         viewModel.money.observe(this, Observer { money.text = getString(R.string.money, it) })
 
         totalWeight = view.findViewById(R.id.total_weight)
         viewModel.allItems.observe(this, Observer {
-            totalWeight.text = getString(R.string.weight,it.sumByDouble { item -> item.weight.toDouble() })
+            totalWeight.text = getString(R.string.weight, it.sumByDouble { item -> item.weight.toDouble() })
         })
 
         val itemsList: RecyclerView = view.findViewById(R.id.items)
@@ -118,7 +139,7 @@ class InventoryFragment : Fragment(), BaseSelectingAdapter.ItemInteractor<Item> 
             viewModel.selectItem(item)
         } else {
             val data = Bundle()
-            data.putString("item_uid",item.uid)
+            data.putString("item_uid", item.uid)
             view?.findNavController()?.navigate(R.id.itemDetailsFragment, data)
         }
     }
