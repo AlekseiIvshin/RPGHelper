@@ -14,6 +14,7 @@
             android:id="@+id/item_name" android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginStart="8dp" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="32dp"
+            android:nextFocusForward="@id/item_cost"
             android:hint="@string/hint_item_name"/>
     <EditText
             android:layout_width="0dp"
@@ -22,6 +23,7 @@
             android:ems="10"
             android:id="@+id/item_cost" android:layout_marginTop="32dp"
             app:layout_constraintWidth_percent="0.4"
+            android:nextFocusDown="@id/item_weight"
             app:layout_constraintTop_toBottomOf="@+id/item_name" android:layout_marginStart="8dp"
             app:layout_constraintStart_toStartOf="parent" android:hint="@string/hint_item_cost"/>
     <EditText
@@ -30,6 +32,7 @@
             android:inputType="numberDecimal"
             android:ems="10"
             android:id="@+id/item_weight"
+            android:nextFocusForward="@id/item_description"
             app:layout_constraintWidth_percent="0.4"
             android:hint="@string/hint_item_weight" app:layout_constraintBaseline_toBaselineOf="@+id/item_cost"
             app:layout_constraintEnd_toStartOf="@+id/textView2"/>
