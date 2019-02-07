@@ -38,7 +38,6 @@ class InventoryFragment : Fragment(), BaseSelectingAdapter.ItemInteractor<Item> 
         super.onCreate(savedInstanceState)
         arguments?.let {
             sessionUid = it.getString("session_uid")
-            viewModel = InventoryViewModel(activity!!.application, sessionUid!!)
         }
         setHasOptionsMenu(true)
     }
@@ -51,12 +50,26 @@ class InventoryFragment : Fragment(), BaseSelectingAdapter.ItemInteractor<Item> 
         val view = inflater.inflate(R.layout.fragment_inventory, container, false)
 
         (activity as AppCompatActivity).setSupportActionBar(view.findViewById(R.id.bottom_bar))
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel = InventoryViewModel(activity!!.application, sessionUid!!)
 
         view.findViewById<FloatingActionButton>(R.id.add_item).setOnClickListener {
             val data = Bundle()
             data.putString("session_uid", sessionUid)
             view.findNavController().navigate(R.id.add_inventory_item, data)
         }
+
+        totalWeight = view.findViewById(R.id.total_weight)
+
+        val itemsList: RecyclerView = view.findViewById(R.id.items)
+        val adapter = InventoryAdapter(view.context, this)
+        itemsList.adapter = adapter
+        itemsList.layoutManager = LinearLayoutManager(view.context)
 
         money = view.findViewById(R.id.money)
         money.setOnClickListener {
@@ -69,34 +82,28 @@ class InventoryFragment : Fragment(), BaseSelectingAdapter.ItemInteractor<Item> 
                     run {
                         viewModel.updateMoney(input.text.toString().toInt())
                     }
-
                 }
                 show()
             }
 
         }
 
+        viewModel.money.removeObservers(this)
         viewModel.money.observe(this, Observer { money.text = getString(R.string.money, it) })
 
-        totalWeight = view.findViewById(R.id.total_weight)
-        viewModel.allItems.observe(this, Observer {
-            totalWeight.text = getString(R.string.weight, it.sumByDouble { item -> item.weight.toDouble() })
-        })
-
-        val itemsList: RecyclerView = view.findViewById(R.id.items)
-        val adapter = InventoryAdapter(view.context, this)
-        itemsList.adapter = adapter
-        itemsList.layoutManager = LinearLayoutManager(view.context)
-
+        viewModel.allItems.removeObservers(this)
         viewModel.allItems.observe(
             this,
-            Observer { adapter.updateItems(it) })
+            Observer {
+                adapter.updateItems(it)
+                totalWeight.text = getString(R.string.weight, it.sumByDouble { item -> item.weight.toDouble() })
+            })
+
+        viewModel.selectedItems.removeObservers(this)
         viewModel.selectedItems.observe(this, Observer {
             activity?.invalidateOptionsMenu()
             adapter.updateSelectedItems(it)
         })
-
-        return view
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

@@ -1,11 +1,13 @@
 package com.eficksan.rpghelper.screens
 
 
+import android.app.Activity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
@@ -26,7 +28,6 @@ class UpdateItemFragment : Fragment() {
             sessionUid = it.getString("session_uid")
             itemUid = it.getString("item_uid")
         }
-        viewModel = ItemUpdateViewModel(activity!!.application, itemUid, sessionUid)
     }
 
     override fun onCreateView(
@@ -40,6 +41,8 @@ class UpdateItemFragment : Fragment() {
         val itemDescription = view.findViewById<EditText>(R.id.item_description)
         val itemWeight = view.findViewById<EditText>(R.id.item_weight)
         val itemCost = view.findViewById<EditText>(R.id.item_cost)
+
+        viewModel = ItemUpdateViewModel(activity!!.application, itemUid, sessionUid)
 
         viewModel.item.observe(this, Observer{
             itemName.setText(it.name)
@@ -61,6 +64,8 @@ class UpdateItemFragment : Fragment() {
                 )
             )
 
+            val imm: InputMethodManager = activity?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken,0)
             view.findNavController().popBackStack()
         }
 

@@ -36,8 +36,6 @@ class InventoryViewModel(application: Application, val sessionUid: String) :
         sessionDao.findById(sessionUid).observeForever { money.value = it.money }
     }
 
-    override fun getAll(): LiveData<List<Item>> = inventoryDao.getAll(sessionUid)
-
     override fun insertInIO(item: Item) {
         inventoryDao.insertAll(item)
     }

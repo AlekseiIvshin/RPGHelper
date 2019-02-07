@@ -5,7 +5,7 @@ import androidx.room.*
 import com.eficksan.rpghelper.models.Item
 
 @Dao
-interface  InventoryDao {
+interface InventoryDao {
 
     @Query("select * from inventory where session_uid LIKE :sessionUid")
     fun getAll(sessionUid: String): LiveData<List<Item>>
@@ -20,5 +20,5 @@ interface  InventoryDao {
     fun delete(item: Item)
 
     @Update
-    fun  update(item: Item)
+    fun update(item: Item)
 }

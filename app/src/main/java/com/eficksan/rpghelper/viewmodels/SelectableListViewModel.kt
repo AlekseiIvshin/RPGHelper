@@ -54,8 +54,6 @@ abstract class SelectableListViewModel<T : BaseModel>(application: Application) 
         }
     }
 
-    protected abstract fun getAll(): LiveData<List<T>>
-
     protected abstract fun insertInIO(item: T)
     protected abstract fun updateInIO(item: T)
     protected abstract fun deleteInIO(item: T)
@@ -74,7 +72,7 @@ abstract class SelectableListViewModel<T : BaseModel>(application: Application) 
 
     fun deleteSelected() {
         selectedItems.value?.let { selected ->
-            allItems.value?.filter { item -> selected.contains(item.uid) }?.forEach { deleteInIO(it) }
+            allItems.value?.filter { item -> selected.contains(item.uid) }?.forEach { delete(it) }
         }
     }
 

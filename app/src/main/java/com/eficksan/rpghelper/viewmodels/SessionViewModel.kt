@@ -26,8 +26,6 @@ class SessionViewModel(application: Application): SelectableListViewModel<GameSe
         allItems = gameSessionDao.getAll()
     }
 
-    override fun getAll(): LiveData<List<GameSession>> = gameSessionDao.getAll()
-
     override fun insertInIO(item: GameSession) {
         gameSessionDao.insertAll(item)
     }
